@@ -2,19 +2,57 @@
 const themeSwitch = document.querySelector('.theme-switch');
 const themeIcon = themeSwitch.querySelector('i');
 
-// Check for saved theme preference
-const savedTheme = localStorage.getItem('theme') || 'dark';
-document.documentElement.setAttribute('data-theme', savedTheme);
-updateThemeIcon(savedTheme);
+// Check if the OS is in dark mode
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-// Theme toggle event listener
+// Function to set theme
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    updateThemeIcon(theme);
+}
+
+// Function to update theme icon
+function updateThemeIcon(theme) {
+    themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+}
+
+// Initialize theme
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    // If there's a saved preference, use it
+    setTheme(savedTheme);
+} else {
+    // Otherwise, use the OS preference
+    setTheme(prefersDarkScheme.matches ? 'dark' : 'light');
+}
+
+// Listen for OS theme changes
+prefersDarkScheme.addEventListener('change', (e) => {
+    // Only update if user hasn't manually set a theme
+    if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+    }
+});
+
+// Theme toggle button
 themeSwitch.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
+    setTheme(newTheme);
+});
+
+// Smooth scroll for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    });
 });
 
 // Typing animation
@@ -33,9 +71,9 @@ let currentPhraseIndex = 0;
 let currentCharIndex = 0;
 let isDeleting = false;
 let isPaused = false;
-const typingSpeed = 100; // Speed of typing
-const deletingSpeed = 50; // Speed of deleting
-const pauseDuration = 1500; // Pause between phrases
+const typingSpeed = 100;
+const deletingSpeed = 50;
+const pauseDuration = 1500;
 
 const typingElement = document.querySelector('.typing-text');
 
@@ -76,21 +114,3 @@ function typeText() {
 
 // Start the typing animation
 typeText();
-
-// Update theme icon based on current theme
-function updateThemeIcon(theme) {
-    themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-}
-
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-    });
-});
