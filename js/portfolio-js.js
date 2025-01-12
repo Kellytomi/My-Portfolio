@@ -1,3 +1,36 @@
+// Mobile Navigation
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+const hamburgerIcon = hamburger.querySelector('i');
+
+hamburger.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent document click from immediately closing menu
+    navLinks.classList.toggle('active');
+    // Toggle hamburger icon between bars and times (x)
+    hamburgerIcon.classList.toggle('fa-bars');
+    hamburgerIcon.classList.toggle('fa-times');
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
+        navLinks.classList.remove('active');
+        hamburgerIcon.classList.add('fa-bars');
+        hamburgerIcon.classList.remove('fa-times');
+    }
+});
+
+// Close mobile menu when clicking a nav link
+navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            hamburgerIcon.classList.add('fa-bars');
+            hamburgerIcon.classList.remove('fa-times');
+        }
+    });
+});
+
 // Theme switcher functionality
 const themeSwitch = document.querySelector('.theme-switch');
 const themeIcon = themeSwitch.querySelector('i');
