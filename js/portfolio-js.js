@@ -3,7 +3,7 @@ const themeSwitch = document.querySelector('.theme-switch');
 const themeIcon = themeSwitch.querySelector('i');
 
 // Check if the OS is in dark mode
-const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: light)');
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
 // Function to set theme
 function setTheme(theme) {
@@ -19,18 +19,18 @@ function updateThemeIcon(theme) {
 
 // Initialize theme
 const savedTheme = localStorage.getItem('theme');
-if (savedTheme) {
-    // If there's a saved preference, use it
-    setTheme(savedTheme);
+
+// If user explicitly set a theme, use it. Otherwise, match OS theme
+if (savedTheme === null) {
+    const osTheme = prefersDarkScheme.matches ? 'dark' : 'light';
+    setTheme(osTheme);
 } else {
-    // Otherwise, use the OS preference
-    setTheme(prefersDarkScheme.matches ? 'dark' : 'light');
+    setTheme(savedTheme);
 }
 
 // Listen for OS theme changes
 prefersDarkScheme.addEventListener('change', (e) => {
-    // Only update if user hasn't manually set a theme
-    if (!localStorage.getItem('theme')) {
+    if (localStorage.getItem('theme') === null) {
         setTheme(e.matches ? 'dark' : 'light');
     }
 });
