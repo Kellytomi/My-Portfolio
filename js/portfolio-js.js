@@ -3,7 +3,7 @@ const themeSwitch = document.querySelector('.theme-switch');
 const themeIcon = themeSwitch.querySelector('i');
 
 // Check if the OS is in dark mode
-const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: light)');
 
 // Function to set theme
 function setTheme(theme) {
